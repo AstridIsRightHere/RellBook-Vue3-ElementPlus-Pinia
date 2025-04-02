@@ -37,7 +37,6 @@ const moviePoster = computed(() => {
 const router = useRouter()
 const goToDetail = (movieId: number) => {
   router.push({ path: `/movie/${movieId}` })
-  console.log(movieId)
 }
 </script>
 

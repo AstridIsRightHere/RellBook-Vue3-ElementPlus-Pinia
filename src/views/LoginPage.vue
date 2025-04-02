@@ -34,6 +34,7 @@ const login = () => {
   if (username.value && password.value) {
     const user = { username: username.value, password: password.value }
     userStore.login(user)
+    console.log('sessionStorage 用户信息:', sessionStorage.getItem('user')) // 调试信息
     router.push('/home')
   }
 }

@@ -11,7 +11,7 @@ import AboutPage from '../views/AboutPage.vue'
 const routes = [
   {
     path: '/',
-    redirect: '/login',
+    redirect: '/home',
   },
   {
     path: '/login',
@@ -57,9 +57,14 @@ const router = createRouter({
 // 路由守卫，实现权限控制
 router.beforeEach((to, from, next) => {
   const isAuthenticated = sessionStorage.getItem('user')
+  console.log('目标路由:', to.path)
+  console.log('是否需要认证:', to.meta.requiresAuth)
+  console.log('是否已登录:', isAuthenticated)
   if (to.meta.requiresAuth && !isAuthenticated) {
+    console.log('未登录，重定向到登录页面')
     next('/login')
   } else {
+    console.log('已登录或不需要认证，继续访问')
     next()
   }
 })
