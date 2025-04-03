@@ -20,26 +20,37 @@
         <p><strong>导演：</strong>{{ movie.director }}</p>
         <p><strong>编剧：</strong>{{ movie.screenwriters }}</p>
         <p><strong>类型：</strong>{{ movie.genres }}</p>
-        <p><strong>官方网站：</strong><a :href="movie.officialSite" target="_blank">{{ movie.officialSite }}</a></p>
+        <p>
+          <strong>官方网站：</strong
+          ><a :href="movie.officialSite" target="_blank">{{ movie.officialSite }}</a>
+        </p>
         <p><strong>国家/地区：</strong>{{ movie.countries }}</p>
         <p><strong>语言：</strong>{{ movie.languages }}</p>
         <p><strong>上映日期：</strong>{{ movie.releaseDates }}</p>
         <p><strong>片长：</strong>{{ movie.runtime }}</p>
         <p><strong>别名：</strong>{{ movie.aliases }}</p>
-        <p><strong>IMDb：</strong><a :href="`https://www.imdb.com/title/${movie.imdb}`" target="_blank">{{ movie.imdb }}</a></p>
+        <p>
+          <strong>IMDb：</strong
+          ><a :href="`https://www.imdb.com/title/${movie.imdb}`" target="_blank">{{
+            movie.imdb
+          }}</a>
+        </p>
         <p><strong>评分：</strong>{{ movie.rating }}</p>
         <p><strong>简介：</strong>{{ movie.description }}</p>
-        <p><strong>获奖情况：</strong>
-          <ul>
-            <li v-for="award in movie.awards" :key="award">{{ award }}</li>
-          </ul>
-        </p>
+        <p><strong>获奖情况：</strong></p>
+        <ul>
+          <li v-for="award in movie.awards" :key="award">{{ award }}</li>
+        </ul>
       </div>
 
       <!-- 右侧：购票和广告 -->
       <div class="movie-ticket">
         <button @click="navigateToBookingPage" class="ticket-button">购票</button>
-        <div class="advertisement" @mouseenter="handleAdHover(true)" @mouseleave="handleAdHover(false)">
+        <div
+          class="advertisement"
+          @mouseenter="handleAdHover(true)"
+          @mouseleave="handleAdHover(false)"
+        >
           <img src="https://dummyimage.com/200x200/000/fff" alt="广告" />
         </div>
       </div>
@@ -65,7 +76,12 @@
 
       <!-- 写短评对话框 -->
       <el-dialog v-model="showWriteShortReviewDialog" title="写短评">
-        <el-input v-model="currentShortReview" type="textarea" placeholder="请输入短评内容" autosize></el-input>
+        <el-input
+          v-model="currentShortReview"
+          type="textarea"
+          placeholder="请输入短评内容"
+          autosize
+        ></el-input>
         <template #footer>
           <span class="dialog-footer">
             <el-button @click="showWriteShortReviewDialog = false">取消</el-button>
@@ -78,7 +94,12 @@
       <el-dialog v-model="showWriteReviewDialog" title="写影评">
         <el-form :model="reviewForm">
           <el-form-item label="影评标题" :label-width="formLabelWidth">
-            <el-input v-model="reviewForm.title" placeholder="请输入影评标题" autocomplete="off" autosize/>
+            <el-input
+              v-model="reviewForm.title"
+              placeholder="请输入影评标题"
+              autocomplete="off"
+              autosize
+            />
           </el-form-item>
           <el-form-item label="影评内容" :label-width="formLabelWidth">
             <el-input
@@ -113,7 +134,9 @@
             {{ shortReview.content }}
           </div>
           <!-- 根据用户是否匹配显示删除按钮 -->
-          <el-button v-if="shortReview.user === user?.username" @click="removeShortReview(index)">删除</el-button>
+          <el-button v-if="shortReview.user === user?.username" @click="removeShortReview(index)"
+            >删除</el-button
+          >
         </el-card>
       </div>
 
@@ -135,7 +158,9 @@
             <el-rate v-model="review.rating" disabled show-text />
           </div>
           <!-- 根据用户是否匹配显示删除按钮 -->
-          <el-button v-if="review.user === user?.username" @click="removeReview(index)">删除</el-button>
+          <el-button v-if="review.user === user?.username" @click="removeReview(index)"
+            >删除</el-button
+          >
         </el-card>
       </div>
     </div>
@@ -143,120 +168,122 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, computed } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
-import { ElMessage, ElMessageBox } from 'element-plus';
-import moviesData from '../data/movies.json';
+import { ref, reactive, onMounted, computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import moviesData from '../data/movies.json'
 import { useUserStore } from '../stores/userStore'
 const userStore = useUserStore()
 const user = userStore.user
 
-const router = useRouter();
-const route = useRoute();
+const router = useRouter()
+const route = useRoute()
 
 // 获取当前电影信息
-const movieId = route.params.id as string;
+const movieId = route.params.id as string
 const movie = computed(() => {
-  return moviesData[movieId];
-});
-
+  return moviesData[movieId as keyof typeof moviesData] || null
+})
 // 动态计算电影海报路径
 const moviePoster = computed(() => {
-  return new URL(`/src/assets/card/${movie.value.poster}.jpg`, import.meta.url).href;
-});
+  return new URL(`/src/assets/card/${movie.value.poster}.jpg`, import.meta.url).href
+})
 
 // 跳转到电影选座页面
 const navigateToBookingPage = () => {
-  router.push({ path: `/booking/${movieId}` });
-};
+  router.push({ path: `/booking/${movieId}` })
+}
 
 // 广告交互状态
-const isAdHovered = ref(false);
+const isAdHovered = ref(false)
 const handleAdHover = (isHover: boolean) => {
-  isAdHovered.value = isHover;
-};
+  isAdHovered.value = isHover
+}
 
 // 用户评价状态
-const isInterested = ref(false); // 是否想看
-const isWatched = ref(false); // 是否看过
-const userRating = ref(0); // 用户评分
+const isInterested = ref(false) // 是否想看
+const isWatched = ref(false) // 是否看过
+const userRating = ref(0) // 用户评分
 
 // 短评相关
-const showWriteShortReviewDialog = ref(false); // 写短评对话框显示状态
-const currentShortReview = ref(''); // 当前输入的短评内容
-const shortReviews = ref<{ user: string; time: string; content: string }[]>([]); // 短评列表
+const showWriteShortReviewDialog = ref(false) // 写短评对话框显示状态
+const currentShortReview = ref('') // 当前输入的短评内容
+const shortReviews = ref<{ user: string; time: string; content: string }[]>([]) // 短评列表
 
 // 影评相关
-const showWriteReviewDialog = ref(false); // 写影评对话框显示状态
-const reviewForm = reactive({ // 影评表单数据
+const showWriteReviewDialog = ref(false) // 写影评对话框显示状态
+const reviewForm = reactive({
+  // 影评表单数据
   title: '',
   content: '',
   rating: 0,
-});
-const formLabelWidth = '80px'; // 表单标签宽度
-const reviews = ref<{ user: string; time: string; title: string; content: string; rating: number }[]>([]); // 影评列表
+})
+const formLabelWidth = '80px' // 表单标签宽度
+const reviews = ref<
+  { user: string; time: string; title: string; content: string; rating: number }[]
+>([]) // 影评列表
 
 // 从本地存储加载评价数据
 const loadEvaluationData = () => {
-  const storedShortReviews = sessionStorage.getItem(`shortReviews_${movieId}`);
-  const storedReviews = sessionStorage.getItem(`reviews_${movieId}`);
-  const storedIsInterested = sessionStorage.getItem(`isInterested_${movieId}`);
-  const storedIsWatched = sessionStorage.getItem(`isWatched_${movieId}`);
-  const storedUserRating = sessionStorage.getItem(`userRating_${movieId}`);
-  if (storedShortReviews) shortReviews.value = JSON.parse(storedShortReviews);
-  if (storedReviews) reviews.value = JSON.parse(storedReviews);
-  if (storedIsInterested) isInterested.value = JSON.parse(storedIsInterested);
-  if (storedIsWatched) isWatched.value = JSON.parse(storedIsWatched);
-  if (storedUserRating) userRating.value = Number(storedUserRating);
-};
+  const storedShortReviews = sessionStorage.getItem(`shortReviews_${movieId}`)
+  const storedReviews = sessionStorage.getItem(`reviews_${movieId}`)
+  const storedIsInterested = sessionStorage.getItem(`isInterested_${movieId}`)
+  const storedIsWatched = sessionStorage.getItem(`isWatched_${movieId}`)
+  const storedUserRating = sessionStorage.getItem(`userRating_${movieId}`)
+  if (storedShortReviews) shortReviews.value = JSON.parse(storedShortReviews)
+  if (storedReviews) reviews.value = JSON.parse(storedReviews)
+  if (storedIsInterested) isInterested.value = JSON.parse(storedIsInterested)
+  if (storedIsWatched) isWatched.value = JSON.parse(storedIsWatched)
+  if (storedUserRating) userRating.value = Number(storedUserRating)
+}
 
 // 保存评价数据到本地存储
 const saveEvaluationData = () => {
-  sessionStorage.setItem(`shortReviews_${movieId}`, JSON.stringify(shortReviews.value));
-  sessionStorage.setItem(`reviews_${movieId}`, JSON.stringify(reviews.value));
-  sessionStorage.setItem(`isInterested_${movieId}`, JSON.stringify(isInterested.value));
-  sessionStorage.setItem(`isWatched_${movieId}`, JSON.stringify(isWatched.value));
-  sessionStorage.setItem(`userRating_${movieId}`, JSON.stringify(userRating.value));
-};
+  sessionStorage.setItem(`shortReviews_${movieId}`, JSON.stringify(shortReviews.value))
+  sessionStorage.setItem(`reviews_${movieId}`, JSON.stringify(reviews.value))
+  sessionStorage.setItem(`isInterested_${movieId}`, JSON.stringify(isInterested.value))
+  sessionStorage.setItem(`isWatched_${movieId}`, JSON.stringify(isWatched.value))
+  sessionStorage.setItem(`userRating_${movieId}`, JSON.stringify(userRating.value))
+}
 
 // 切换"想看"状态
 const toggleInterest = () => {
-  isInterested.value = !isInterested.value;
-  saveEvaluationData();
-  ElMessage.success(isInterested.value ? '已标记为想看' : '已取消想看标记');
-};
+  isInterested.value = !isInterested.value
+  saveEvaluationData()
+  ElMessage.success(isInterested.value ? '已标记为想看' : '已取消想看标记')
+}
 
 // 切换"看过"状态
 const toggleWatched = () => {
-  isWatched.value = !isWatched.value;
-  saveEvaluationData();
-  ElMessage.success(isWatched.value ? '已标记为看过' : '已取消看过标记');
-};
+  isWatched.value = !isWatched.value
+  saveEvaluationData()
+  ElMessage.success(isWatched.value ? '已标记为看过' : '已取消看过标记')
+}
 
 // 提交短评
 const submitShortReview = () => {
   if (!currentShortReview.value.trim()) {
-    ElMessage.warning('请输入短评内容');
-    return;
+    ElMessage.warning('请输入短评内容')
+    return
   }
 
   shortReviews.value.push({
     user: `${user?.username || '匿名用户'}`, // 使用模板字符串并处理可能的 undefined
     time: new Date().toLocaleString(),
     content: currentShortReview.value,
-  });
+  })
 
-  currentShortReview.value = '';
-  showWriteShortReviewDialog.value = false;
-  saveEvaluationData();
-  ElMessage.success('短评提交成功');
-};
+  currentShortReview.value = ''
+  showWriteShortReviewDialog.value = false
+  saveEvaluationData()
+  ElMessage.success('短评提交成功')
+}
 
 // 提交影评
 const submitReview = () => {
   if (!reviewForm.title.trim() || !reviewForm.content.trim() || reviewForm.rating === 0) {
-    ElMessage.warning('请填写完整的影评信息');
-    return;
+    ElMessage.warning('请填写完整的影评信息')
+    return
   }
 
   reviews.value.push({
@@ -265,66 +292,67 @@ const submitReview = () => {
     title: reviewForm.title,
     content: reviewForm.content,
     rating: reviewForm.rating,
-  });
+  })
 
   // 重置表单
-  reviewForm.title = '';
-  reviewForm.content = '';
-  reviewForm.rating = 0;
+  reviewForm.title = ''
+  reviewForm.content = ''
+  reviewForm.rating = 0
 
-  showWriteReviewDialog.value = false;
-  saveEvaluationData();
-  ElMessage.success('影评提交成功');
-};
+  showWriteReviewDialog.value = false
+  saveEvaluationData()
+  ElMessage.success('影评提交成功')
+}
 
 // 删除短评
 const removeShortReview = (index: number) => {
-  shortReviews.value.splice(index, 1);
-  saveEvaluationData();
-  ElMessage.success('短评删除成功');
-};
+  shortReviews.value.splice(index, 1)
+  saveEvaluationData()
+  ElMessage.success('短评删除成功')
+}
 
 // 删除影评
 const removeReview = (index: number) => {
-  ElMessageBox.confirm(
-    '确定要删除这条影评吗？',
-    '提示',
-    {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning',
-    }
-  ).then(() => {
-    reviews.value.splice(index, 1);
-    saveEvaluationData();
-    ElMessage({
-      type: 'success',
-      message: '影评删除成功',
+  ElMessageBox.confirm('确定要删除这条影评吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+    .then(() => {
+      reviews.value.splice(index, 1)
+      saveEvaluationData()
+      ElMessage({
+        type: 'success',
+        message: '影评删除成功',
+      })
     })
-  }).catch(() => {
-    ElMessage({
-      type: 'info',
-      message: '已取消删除',
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '已取消删除',
+      })
     })
-  });
-};
+}
 
 // 分享功能
 const handleShare = (command: string) => {
   if (command === 'share') {
-    const url = window.location.href;
-    navigator.clipboard.writeText(url).then(() => {
-      ElMessage.success('链接已复制到剪贴板');
-    }).catch(() => {
-      ElMessage.error('复制链接失败');
-    });
+    const url = window.location.href
+    navigator.clipboard
+      .writeText(url)
+      .then(() => {
+        ElMessage.success('链接已复制到剪贴板')
+      })
+      .catch(() => {
+        ElMessage.error('复制链接失败')
+      })
   }
-};
+}
 
 // 生命周期钩子
 onMounted(() => {
-  loadEvaluationData();
-});
+  loadEvaluationData()
+})
 </script>
 
 <style scoped>
