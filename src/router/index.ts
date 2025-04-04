@@ -37,7 +37,7 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: '/order-confirm',
+    path: '/booking/:id/order-confirm',
     component: OrderConfirm,
     meta: { requiresAuth: true },
   },

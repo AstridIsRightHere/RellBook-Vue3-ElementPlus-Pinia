@@ -369,14 +369,11 @@ onMounted(() => {
   gap: 20px;
   margin-top: 20px;
   justify-content: space-between;
-  align-items: center;
 }
 
 .movie-cover {
   width: 250px;
   flex-shrink: 0;
-  position: sticky;
-  top: 100px;
 }
 
 .movie-cover img {
@@ -412,8 +409,6 @@ onMounted(() => {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  position: sticky;
-  top: 100px;
 }
 
 .ticket-button {
@@ -490,10 +485,7 @@ onMounted(() => {
 .el-card {
   margin-bottom: 15px;
   padding: 15px;
-  border: 1px solid #ebeef5;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: box-shadow 0.3s;
 }
 
 .el-card:hover {
@@ -562,32 +554,10 @@ onMounted(() => {
   }
 }
 
-/* 按钮样式 */
-.el-button {
-  padding: 10px 15px;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-.el-button--primary {
-  background-color: #409eff;
-  border-color: #409eff;
-}
-
-.el-button--primary:hover {
-  background-color: #66b1ff;
-  border-color: #66b1ff;
-}
-
 /* 面包屑导航 */
 .el-breadcrumb {
   margin-bottom: 20px;
   font-size: 14px;
-}
-
-.el-breadcrumb__inner {
-  color: #409eff;
-  font-weight: bold;
 }
 
 /* 广告图片 */
@@ -602,11 +572,6 @@ onMounted(() => {
   margin-bottom: 15px;
   padding-bottom: 5px;
   border-bottom: 1px solid #ebeef5;
-}
-
-.el-card__body {
-  display: flex;
-  flex-direction: column;
 }
 
 .review-content {

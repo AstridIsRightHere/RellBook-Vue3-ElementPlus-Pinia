@@ -99,7 +99,7 @@ const confirmPurchase = () => {
       // 保存到 Pinia Store
       orderStore.saveOrderInfo(orderInfo)
       // 跳转到订单确认页面
-      router.push({ path: '/order-confirm' })
+      router.push({ path: `/booking/${movieId}/order-confirm` })
     })
     .catch(() => {
       ElMessage({

@@ -1,19 +1,7 @@
 <template>
   <div class="home-page">
     <!-- 顶部导航栏 -->
-    <el-menu
-      :default-active="activeIndex"
-      class="el-menu-demo"
-      mode="horizontal"
-      :ellipsis="false"
-      @select="handleSelect"
-    >
-      <el-menu-item index="home">首页</el-menu-item>
-      <el-menu-item index="about" style="margin-left: auto">关于</el-menu-item>
-      <el-menu-item index="user-avatar">
-        <el-avatar src="https://dummyimage.com/50x50/000/fff  " shape="circle"></el-avatar>
-      </el-menu-item>
-    </el-menu>
+    <Navbar />
     <!-- 轮播图 -->
     <el-carousel autoplay :interval="2000" indicator-position="none">
       <el-carousel-item v-for="(image, index) in carouselImages" :key="index">
@@ -47,6 +35,7 @@
 </template>
 
 <script setup lang="ts">
+import Navbar from '@/components/NavbarCom.vue'
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../stores/userStore'
@@ -57,16 +46,6 @@ import { ElMessage } from 'element-plus'
 const router = useRouter()
 const userStore = useUserStore()
 const user = userStore.user
-
-// 导航栏相关
-const activeIndex = ref('home')
-const handleSelect = (key: string) => {
-  if (key === 'home') {
-    router.push('/home')
-  } else if (key === 'about') {
-    router.push('/about')
-  }
-}
 
 // 飘窗相关
 const showFloatingWindow = ref(true)

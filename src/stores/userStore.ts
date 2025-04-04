@@ -21,5 +21,10 @@ export const useUserStore = defineStore('user', {
       this.user = null
       sessionStorage.removeItem('user')
     },
+    // 更新用户信息
+    updateUserInfo(newUserInfo: { username: string; password: string }) {
+      this.user = newUserInfo
+      sessionStorage.setItem('user', JSON.stringify(newUserInfo))
+    },
   },
 })
